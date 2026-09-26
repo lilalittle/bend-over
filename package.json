@@ -10,7 +10,10 @@
     "build:sqlite": "bun scripts/build-sqlite.ts",
     "dev:sqlite": "bun run build:sqlite && bun scripts/serve-sqlite.ts",
     "test:sqlite": "bend packages/sqlite/PROOF.bend && bun test tests/unit/sqlite.test.ts tests/unit/sqlite-host.test.ts",
-    "test:sqlite:browser": "playwright test --config playwright.sqlite.config.ts"
+    "test:sqlite:browser": "playwright test --config playwright.sqlite.config.ts",
+    "release:check": "bun scripts/release.ts check",
+    "release:publish": "bun scripts/release.ts publish",
+    "toolchain:install": "bun scripts/release/toolchain.ts"
   },
   "dependencies": {
     "@sqlite.org/sqlite-wasm": "3.53.4-build1"
