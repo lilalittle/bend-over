@@ -1,0 +1,12 @@
+{
+  "name": "bend-over",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "bun scripts/build.ts",
+    "dev": "bun run build && bun scripts/serve.ts",
+    "start": "bun scripts/serve.ts",
+    "test": "bun test tests/unit",
+    "test:e2e": "playwright test"
+  }
+}

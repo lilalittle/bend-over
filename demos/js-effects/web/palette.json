@@ -1,0 +1,8 @@
+{
+  "name": "Signal palette",
+  "tones": {
+    "mint": { "hue": 166, "label": "Mint" },
+    "amber": { "hue": 37, "label": "Amber" },
+    "rose": { "hue": 345, "label": "Rose" }
+  }
+}
