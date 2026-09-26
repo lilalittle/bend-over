@@ -30,3 +30,9 @@ def Laws.zero_text():
 
 def Laws.rejects_empty_integer():
   {==}
+
+def Laws.cleanup_preserves_error(code, message):
+  {==}
+
+def Laws.cleanup_reports_failure(code, message):
+  {==}

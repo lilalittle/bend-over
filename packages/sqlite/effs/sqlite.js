@@ -45,7 +45,7 @@ function handler(op) {
       const host = globalThis[Symbol.for("bend.sqlite.runtime.v1")];
       if (!host || host.version !== 1) throw Object.assign(new Error("Initialize SQLite Wasm before running Bend."), {code:21});
       // Bend's CLI appends its continuation; forward only actual arguments.
-      const n = {open:2,import:1,close:1,finalize:1,prepare:2,bind:3,bind_named:3,step:1,reset:1,clear_bindings:1,column_names:1,parameter_count:1,parameter_index:2,script:2,execute:3,query:3,busy_timeout:2,export:1}[op];
+      const n = {open:2,import:1,close:1,dispose:1,finalize:1,prepare:2,bind:3,bind_named:3,step:1,reset:1,clear_bindings:1,column_names:1,parameter_count:1,parameter_index:2,script:2,execute:3,query:3,busy_timeout:2,export:1}[op];
       args = args.slice(0, n);
       if (op === "bind" || op === "bind_named") args[2] = decode(args[2]);
       if (op === "query" || op === "execute") args[2] = array(args[2]).map(decode);
@@ -55,7 +55,7 @@ function handler(op) {
       const e = tuple((error.code ?? error.resultCode ?? 1) >>> 0, String(error.message ?? error));
       answer = fail(op === "close" ? tuple(e, handle) : e);
     }
-    return ["open", "import", "close", "finalize"].includes(op) ? answer : tuple(handle, answer);
+    return ["open", "import", "close", "dispose", "finalize"].includes(op) ? answer : tuple(handle, answer);
   };
 }
 io_eff(CID(raw.open), handler("open"));
@@ -76,3 +76,4 @@ io_eff(CID(raw.execute), handler("execute"));
 io_eff(CID(raw.query), handler("query"));
 io_eff(CID(raw.busy_timeout), handler("busy_timeout"));
 io_eff(CID(raw.export), handler("export"));
+io_eff(CID(raw.dispose), handler("dispose"));

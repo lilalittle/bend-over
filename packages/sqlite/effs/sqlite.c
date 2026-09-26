@@ -209,7 +209,7 @@ typedef struct {
 } BsJob;
 enum { BS_OPEN, BS_IMPORT, BS_CLOSE, BS_FINALIZE, BS_PREPARE, BS_BIND,
   BS_BIND_NAMED, BS_STEP, BS_RESET, BS_CLEAR, BS_NAMES, BS_COUNT, BS_INDEX,
-  BS_SCRIPT, BS_EXECUTE, BS_QUERY, BS_TIMEOUT, BS_EXPORT };
+  BS_SCRIPT, BS_EXECUTE, BS_QUERY, BS_TIMEOUT, BS_EXPORT, BS_DISPOSE };
 static void bs_error(BsJob* j, int code, const char* message) {
   if (j->code) return;
   j->code = code; j->message = io_mem(strdup(message ? message : "SQLite error"));
@@ -377,6 +377,19 @@ static void bs_call(IoWork* w) {
   if (o->removed || o->kind != kind || !parent->db) bs_error(j, SQLITE_MISUSE, "Invalid or expired SQLite handle.");
   sqlite3* db = parent->db;
   if (!j->code) switch (j->op) {
+    case BS_DISPOSE:
+      for (;;) {
+        pthread_mutex_lock(&bs_registry_lock);
+        BsObject* child = bs_registry;
+        while (child && child->owner != o) child = child->next;
+        if (child) child->refs++;
+        pthread_mutex_unlock(&bs_registry_lock);
+        if (!child) break;
+        bs_check(j, bs_finalize(child->stmt), db); child->stmt = NULL;
+        o->statements--; bs_remove(child); bs_release(child);
+      }
+      { int rc = bs_close(db); if (rc) bs_check(j, rc, db); else { o->db = NULL; bs_remove(o); } }
+      break;
     case BS_CLOSE:
       if (o->statements) bs_error(j, SQLITE_BUSY, "Cannot close a connection with outstanding statements.");
       else { int rc = bs_close(db); if (rc) bs_check(j, rc, db); else { o->db = NULL; bs_remove(o); } }
@@ -478,7 +491,7 @@ static Term bs_pack(Env e, IoWork* w) {
     }
     result = io_done(e, value);
   }
-  if (j->op != BS_OPEN && j->op != BS_IMPORT && j->op != BS_CLOSE && j->op != BS_FINALIZE)
+  if (j->op != BS_OPEN && j->op != BS_IMPORT && j->op != BS_CLOSE && j->op != BS_DISPOSE && j->op != BS_FINALIZE)
     result = io_tup(e, io_hand(j->handle), result);
   bs_job_free(j); w->data = NULL;
   return result;
@@ -593,4 +606,9 @@ static void __attribute__((constructor)) bs_use_busy_timeout(void) { io_eff(CID(
 #ifdef CID(raw.export)
 static Term bs_run_export(Env e, Term* f, IoWork* w) { return bs_run(e, f, w, BS_EXPORT); }
 static void __attribute__((constructor)) bs_use_export(void) { io_eff(CID(raw.export), bs_run_export, 0); }
+#endif
+
+#ifdef CID(raw.dispose)
+static Term bs_run_dispose(Env e, Term* f, IoWork* w) { return bs_run(e, f, w, BS_DISPOSE); }
+static void __attribute__((constructor)) bs_use_dispose(void) { io_eff(CID(raw.dispose), bs_run_dispose, 0); }
 #endif

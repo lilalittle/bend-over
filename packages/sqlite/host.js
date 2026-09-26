@@ -12,7 +12,8 @@ export function createRuntime(sqlite, { pool = null } = {}) {
   const registry = new Map();
   let disposed = false;
   const check = (rc, db) => {
-    if (rc) throw new SQLiteError(db ? c.sqlite3_extended_errcode(db) || rc : rc,
+    const extended = db ? c.sqlite3_extended_errcode(db) : rc;
+    if (rc) throw new SQLiteError((extended & 255) === (rc & 255) ? extended : rc,
       db ? c.sqlite3_errmsg(db) : c.sqlite3_errstr(rc));
   };
   const register = (entry) => {
@@ -144,7 +145,7 @@ export function createRuntime(sqlite, { pool = null } = {}) {
     return result;
   }
   const names = (entry) => Array.from({length:c.sqlite3_column_count(entry.stmt)}, (_, i) => c.sqlite3_column_name(entry.stmt, i));
-  const connectionOps = new Set(["close", "prepare", "script", "query", "execute", "busy_timeout", "export"]);
+  const connectionOps = new Set(["close", "dispose", "prepare", "script", "query", "execute", "busy_timeout", "export"]);
   return {
     version: 1,
     invoke(op, args) {
@@ -168,6 +169,13 @@ export function createRuntime(sqlite, { pool = null } = {}) {
       const entry = get(handle, connectionOps.has(op) ? "connection" : "statement");
       switch (op) {
         case "close": if (entry.statements.size) bad("Cannot close a connection with outstanding statements.", 5); check(c.sqlite3_close_v2(entry.db), entry.db); registry.delete(handle); return;
+        case "dispose": {
+          let error;
+          for (const h of [...entry.statements]) { try { finalize(h); } catch (e) { error ??= e; } }
+          check(c.sqlite3_close_v2(entry.db), entry.db); registry.delete(handle);
+          if (error) throw error;
+          return;
+        }
         case "prepare": return prepare(entry, a[0]);
         case "bind": return bind(entry, a[0], a[1]);
         case "bind_named": {

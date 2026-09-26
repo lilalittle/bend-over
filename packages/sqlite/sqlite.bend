@@ -446,3 +446,115 @@ def export(resource: Connection) -> IO(Connection & Result<&1, &1, U32 & String,
   do IO<Connection & Result<&1, &1, U32 & String, List<&2, U32>>>:
     r : File & Result<&1, &1, U32 & String, List<&2, U32>> <- raw.export(handle)
     return wrap.export.pair(r)
+
+# Scoped cleanup also reclaims statements left open by the callback.
+def raw.dispose(handle: File) -> IO(Result<&1, &1, U32 & String, Unit>):
+  import "./effs/sqlite.c"
+  import "./effs/sqlite.js"
+
+def dispose(db: Connection) -> IO(Result<&1, &1, U32 & String, Unit>):
+  Connection{handle} = db
+  raw.dispose(handle)
+
+def begin(db: Connection) -> IO(Connection & Result<&1, &1, U32 & String, Unit>):
+  script(db, "BEGIN")
+
+def commit(db: Connection) -> IO(Connection & Result<&1, &1, U32 & String, Unit>):
+  script(db, "COMMIT")
+
+def rollback(db: Connection) -> IO(Connection & Result<&1, &1, U32 & String, Unit>):
+  script(db, "ROLLBACK")
+
+# Preserve the primary error if both the body and its cleanup fail.
+def cleanup.merge(-A: Type, result: Result<&1, &1, U32 & String, A>, cleanup: Result<&1, &1, U32 & String, Unit>) -> Result<&1, &1, U32 & String, A>:
+  match result:
+    case Done{value}:
+      match cleanup:
+        case Done{u}:
+          Done{value}
+        case Fail{error}:
+          Fail{error}
+    case Fail{(code, message)}:
+      match cleanup:
+        case Done{u}:
+          Fail{(code, message)}
+        case Fail{(other, detail)}:
+          Fail{(code, message ++ "; cleanup: " ++ detail)}
+
+def scope.connection.end(-A: Type, pair: Connection & Result<&1, &1, U32 & String, A>) -> IO(Result<&1, &1, U32 & String, A>):
+  (db, result) = pair
+  do IO<Result<&1, &1, U32 & String, A>>:
+    cleaned : Result<&1, &1, U32 & String, Unit> <- dispose(db)
+    return cleanup.merge(A, result, cleaned)
+
+def scope.connection.start(-A: Type, opened: Result<&1, &1, U32 & String, Connection>, body: Connection -> IO(Connection & Result<&1, &1, U32 & String, A>)) -> IO(Result<&1, &1, U32 & String, A>):
+  match opened:
+    case Fail{error}:
+      IO.pure(Result<&1, &1, U32 & String, A>, Fail{error})
+    case Done{db}:
+      do IO<Result<&1, &1, U32 & String, A>>:
+        pair : Connection & Result<&1, &1, U32 & String, A> <- body(db)
+        scope.connection.end(A, pair)
+
+def with_connection(-A: Type, path: String, body: Connection -> IO(Connection & Result<&1, &1, U32 & String, A>)) -> IO(Result<&1, &1, U32 & String, A>):
+  do IO<Result<&1, &1, U32 & String, A>>:
+    opened : Result<&1, &1, U32 & String, Connection> <- open(path)
+    scope.connection.start(A, opened, body)
+
+def scope.statement.end(-A: Type, db: Connection, pair: Statement & Result<&1, &1, U32 & String, A>) -> IO(Connection & Result<&1, &1, U32 & String, A>):
+  (stmt, result) = pair
+  do IO<Connection & Result<&1, &1, U32 & String, A>>:
+    cleaned : Result<&1, &1, U32 & String, Unit> <- finalize(stmt)
+    return (db, cleanup.merge(A, result, cleaned))
+
+def scope.statement.start(-A: Type, pair: Connection & Result<&1, &1, U32 & String, Statement>, body: Statement -> IO(Statement & Result<&1, &1, U32 & String, A>)) -> IO(Connection & Result<&1, &1, U32 & String, A>):
+  match pair:
+    case (db, Fail{error}):
+      IO.pure(Connection & Result<&1, &1, U32 & String, A>, (db, Fail{error}))
+    case (db, Done{stmt}):
+      do IO<Connection & Result<&1, &1, U32 & String, A>>:
+        answer : Statement & Result<&1, &1, U32 & String, A> <- body(stmt)
+        scope.statement.end(A, db, answer)
+
+def with_statement(-A: Type, db: Connection, sql: String, body: Statement -> IO(Statement & Result<&1, &1, U32 & String, A>)) -> IO(Connection & Result<&1, &1, U32 & String, A>):
+  do IO<Connection & Result<&1, &1, U32 & String, A>>:
+    prepared : Connection & Result<&1, &1, U32 & String, Statement> <- prepare(db, sql)
+    scope.statement.start(A, prepared, body)
+
+def transaction.rolled(-A: Type, result: Result<&1, &1, U32 & String, A>, pair: Connection & Result<&1, &1, U32 & String, Unit>) -> Connection & Result<&1, &1, U32 & String, A>:
+  (db, cleaned) = pair
+  (db, cleanup.merge(A, result, cleaned))
+
+def transaction.committed(-A: Type, value: A, pair: Connection & Result<&1, &1, U32 & String, Unit>) -> IO(Connection & Result<&1, &1, U32 & String, A>):
+  match pair:
+    case (db, Done{u}):
+      IO.pure(Connection & Result<&1, &1, U32 & String, A>, (db, Done{value}))
+    case (db, Fail{error}):
+      do IO<Connection & Result<&1, &1, U32 & String, A>>:
+        rolled : Connection & Result<&1, &1, U32 & String, Unit> <- rollback(db)
+        return transaction.rolled(A, Fail{error}, rolled)
+
+def transaction.end(-A: Type, pair: Connection & Result<&1, &1, U32 & String, A>) -> IO(Connection & Result<&1, &1, U32 & String, A>):
+  match pair:
+    case (db, Done{value}):
+      do IO<Connection & Result<&1, &1, U32 & String, A>>:
+        committed : Connection & Result<&1, &1, U32 & String, Unit> <- commit(db)
+        transaction.committed(A, value, committed)
+    case (db, Fail{error}):
+      do IO<Connection & Result<&1, &1, U32 & String, A>>:
+        rolled : Connection & Result<&1, &1, U32 & String, Unit> <- rollback(db)
+        return transaction.rolled(A, Fail{error}, rolled)
+
+def transaction.start(-A: Type, pair: Connection & Result<&1, &1, U32 & String, Unit>, body: Connection -> IO(Connection & Result<&1, &1, U32 & String, A>)) -> IO(Connection & Result<&1, &1, U32 & String, A>):
+  match pair:
+    case (db, Fail{error}):
+      IO.pure(Connection & Result<&1, &1, U32 & String, A>, (db, Fail{error}))
+    case (db, Done{u}):
+      do IO<Connection & Result<&1, &1, U32 & String, A>>:
+        result : Connection & Result<&1, &1, U32 & String, A> <- body(db)
+        transaction.end(A, result)
+
+def transaction(-A: Type, db: Connection, body: Connection -> IO(Connection & Result<&1, &1, U32 & String, A>)) -> IO(Connection & Result<&1, &1, U32 & String, A>):
+  do IO<Connection & Result<&1, &1, U32 & String, A>>:
+    begun : Connection & Result<&1, &1, U32 & String, Unit> <- begin(db)
+    transaction.start(A, begun, body)

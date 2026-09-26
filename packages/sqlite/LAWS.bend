@@ -25,3 +25,15 @@ law zero_text:
 
 law rejects_empty_integer:
   {S.I64.read("") == None{} : Maybe<&2, S.I64>}
+
+# Successful cleanup cannot replace the original operation error.
+law cleanup_preserves_error:
+  for code: U32
+  for message: String
+  {S.cleanup.merge(Unit, Fail{(code, message)}, Done{Unit{}}) == Fail{(code, message)} : Result<&1, &1, U32 & String, Unit>}
+
+# A cleanup failure cannot turn a successful operation into success.
+law cleanup_reports_failure:
+  for code: U32
+  for message: String
+  {S.cleanup.merge(Unit, Done{Unit{}}, Fail{(code, message)}) == Fail{(code, message)} : Result<&1, &1, U32 & String, Unit>}
