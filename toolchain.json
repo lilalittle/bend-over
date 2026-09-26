@@ -1,0 +1,20 @@
+{
+  "bun": "1.4.2",
+  "bend": {
+    "version": "2.0.29",
+    "source": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "sourceSha256": "193dc36c7d317832a5ec68ea7018b420b26cdac72e596ebd14c2f443a47c5cca",
+    "files": {
+      "bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      "bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      "bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      "bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    },
+    "archives": {
+      "darwin-arm64": {"file":"bend-2.0.29-darwin-arm64.tar.gz","sha256":"40bff13c8e33ab65dfe3c09b1863c1f13035b1cf3badafc340a010766ccaf895"},
+      "darwin-x64": {"file":"bend-2.0.29-darwin-x64.tar.gz","sha256":"3a8abed360f1fe6b22ac55c358230ce71c8ad5ffd3b1f104764429b987a61d02"},
+      "linux-arm64": {"file":"bend-2.0.29-linux-arm64.tar.gz","sha256":"74b79cefca579b694da626c4de326b77063a3f913eb46abb7edfdb8b8de257e4"},
+      "linux-x64": {"file":"bend-2.0.29-linux-x64.tar.gz","sha256":"e0ff4fa44581b42f6024d2a1128e7e518219a502cb726030c714a5c23d61726e"}
+    }
+  }
+}

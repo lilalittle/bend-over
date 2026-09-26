@@ -1,0 +1,22 @@
+{
+  "repository": "subtleGradient/bend-over",
+  "hub": "https://hub.bend-lang.com",
+  "packages": {
+    "js-eval": {
+      "name": "bend-over-js-eval",
+      "entry": "packages/js-eval/js.bend",
+      "proof": "packages/js-eval/PROOF.bend",
+      "consumers": ["packages/js-eval/example.bend"],
+      "dependencies": {"bend-kit-json@0.3.0.0": "0xaaa10a97bf5ac6990143da2c863f8a3f"},
+      "companion": false
+    },
+    "sqlite": {
+      "name": "bend-over-sqlite",
+      "entry": "packages/sqlite/sqlite.bend",
+      "proof": "packages/sqlite/PROOF.bend",
+      "consumers": ["tests/fixtures/sqlite/minimal.bend", "tests/fixtures/sqlite/contract.bend"],
+      "dependencies": {},
+      "companion": true
+    }
+  }
+}
