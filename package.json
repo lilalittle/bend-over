@@ -7,5 +7,11 @@
     "dev": "bun run build && bun scripts/serve.ts",
     "start": "bun scripts/serve.ts",
     "test": "bun test tests/unit"
+  },
+  "dependencies": {
+    "@sqlite.org/sqlite-wasm": "3.53.4-build1"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
   }
 }
