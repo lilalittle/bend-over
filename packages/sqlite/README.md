@@ -26,7 +26,20 @@ Bend and SQLite in a module worker and stores its counter in OPFS. Reloading
 preserves the counter. **Release storage** closes the worker and lets another tab
 use the database. Serve over HTTPS or localhost; OPFS needs a secure context.
 
-Import locally:
+Install the Bend API with an exact Hub import:
+
+```bend
+import bend-over-sqlite@0.1.0.0/sqlite.bend as SQLite
+```
+
+For JS/Wasm, download the archive and `SHA256SUMS` from the
+[matching GitHub release](https://github.com/subtleGradient/bend-over/releases/tag/bend-over-sqlite-v0.1.0.0).
+Extract it, then run `bun launch.js counter.js` or `bun serve.js`. The archive
+contains the pinned Wasm assets, so no npm install or repository checkout is
+needed. `bun.js` and `browser.js` export initializers using those bundled assets.
+The release receipt includes the immutable hash import alternative.
+
+Local development imports also work:
 
 ```bend
 import Base
@@ -41,9 +54,9 @@ def main() -> IO(Unit):
 ```
 
 The Bend entry file and its `effs/` directory are self-contained apart from Base
-and host SQLite. This repository does not publish the package. JS consumers also
-need `host.js`, the pinned npm dependency, and its Wasm asset; BendHub's source
-packager does not automatically package these companion assets.
+and host SQLite. CI publishes the Bend package independently and ships the JS
+companions in its matching GitHub release. BendHub's source packager does not
+automatically package those companion assets. See [RELEASING.md](../../RELEASING.md).
 
 ## API
 

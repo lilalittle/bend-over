@@ -112,3 +112,13 @@ bun run test:sqlite:browser # real Chromium OPFS tests
 ```
 
 See the package README for native prerequisites, Wasm initialization, and API examples.
+
+## Package releases
+
+Reusable packages publish independently to BendHub as `bend-over-js-eval` and
+`bend-over-sqlite`. Merge a package `VERSION` bump into `main`; CI verifies native,
+Wasm and browser consumers before naming the release. SQLite's matching GitHub
+release includes a standalone JS/Wasm companion archive.
+
+Run `bun run release:check` before merging. See [RELEASING.md](RELEASING.md) for
+setup, pinned toolchains, downloads, and recovery from interrupted releases.

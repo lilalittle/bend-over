@@ -11,5 +11,6 @@
 
 The browser build copies the upstream JavaScript and Wasm without rewriting them.
 The JavaScript file retains the upstream license header and SQLite blessing.
-This notice records third-party terms and does not assign a license to the
-repository's own code.
+The package's own code is MIT-0 as stated in LICENSE. The release archive also
+includes full Apache-2.0 and Emscripten license texts under licenses/. These
+third-party components retain their original terms.
