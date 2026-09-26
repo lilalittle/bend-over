@@ -6,7 +6,11 @@
     "build": "bun scripts/build.ts",
     "dev": "bun run build && bun scripts/serve.ts",
     "start": "bun scripts/serve.ts",
-    "test": "bun test tests/unit"
+    "test": "bun test tests/unit",
+    "build:sqlite": "bun scripts/build-sqlite.ts",
+    "dev:sqlite": "bun run build:sqlite && bun scripts/serve-sqlite.ts",
+    "test:sqlite": "bend packages/sqlite/PROOF.bend && bun test tests/unit/sqlite.test.ts tests/unit/sqlite-host.test.ts",
+    "test:sqlite:browser": "playwright test --config playwright.sqlite.config.ts"
   },
   "dependencies": {
     "@sqlite.org/sqlite-wasm": "3.53.4-build1"

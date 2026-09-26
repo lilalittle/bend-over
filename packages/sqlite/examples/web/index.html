@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bend SQLite counter</title>
+<style>body{max-width:38rem;margin:4rem auto;padding:0 1rem;font:18px/1.5 system-ui}button{font:inherit;margin-right:.5rem;padding:.5rem 1rem}output{display:block;font-size:3rem;margin:1rem 0}#status{white-space:pre-wrap}</style>
+<h1>Bend + SQLite</h1>
+<p>This counter runs in Bend and persists in your browser. Reload to keep counting.</p>
+<output id="count" aria-live="polite">…</output>
+<button id="increment" disabled>Increment</button><button id="release" disabled>Release storage</button>
+<p id="status" role="status">Opening database…</p>
+<script type="module">
+import {createCounter} from './client.js';
+const counter=createCounter(), count=document.querySelector('#count'), status=document.querySelector('#status');
+const increment=document.querySelector('#increment'), release=document.querySelector('#release');
+try { count.textContent=await counter.read(); status.textContent='Stored locally with SQLite Wasm and OPFS.'; increment.disabled=false; release.disabled=false; }
+catch(e) { status.textContent=e.message; }
+increment.onclick=async()=>{ increment.disabled=true; try {count.textContent=await counter.increment();}catch(e){status.textContent=e.message;}finally{increment.disabled=false;} };
+release.onclick=async()=>{ increment.disabled=true; release.disabled=true; await counter.dispose(); status.textContent='Storage released. Reload to reopen.'; };
+addEventListener('pagehide',()=>counter.terminate());
+</script></html>

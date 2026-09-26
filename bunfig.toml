@@ -1,0 +1,3 @@
+[test]
+# Browser specs are run separately by Playwright.
+root = "./tests/unit"

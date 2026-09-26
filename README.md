@@ -12,7 +12,7 @@ for a future C engine integration.
 ## Run
 
 Requires [Bun](https://bun.sh) and the Bend source checkout linked at `.refs/bend`.
-There are no npm dependencies.
+Run `bun install --frozen-lockfile` to install the SQLite Wasm dependency and browser test tools.
 
 ```sh
 bun run dev
@@ -98,3 +98,17 @@ opening `index.html` with a `file:` URL, so modules and JSON fetches work.
 The UI supports keyboard submission, arrow-key source tabs, narrow viewports,
 and reduced-motion preferences. Source, messages, and trace values are rendered
 as text, never interpreted as user-provided HTML.
+
+## SQLite package
+
+[`packages/sqlite`](packages/sqlite/README.md) provides typed SQLite effects for
+native C and JavaScript/Wasm, prepared statements, transactions, exact 64-bit
+values, database import/export, and persistent browser storage.
+
+```sh
+bun run dev:sqlite          # persistent browser counter on localhost:3001
+bun run test:sqlite         # proofs and native/Wasm integration checks
+bun run test:sqlite:browser # real Chromium OPFS tests
+```
+
+See the package README for native prerequisites, Wasm initialization, and API examples.
