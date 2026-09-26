@@ -4,6 +4,11 @@ A working web demo of **Bend 2 calling JavaScript effects**. Type a message,
 choose a color and delay, and run a real compiled Bend program. The page shows
 the source and a live trace of arguments, return values, failures, and timings.
 
+The reusable [`js-eval` package](packages/js-eval/README.md) also evaluates a Bend
+string as JavaScript and returns `Result<String, Json.Val>`, using
+`bend-kit-json@0.3.0.0`. It supports the JS target now, with a string/JSON boundary
+for a future C engine integration.
+
 ## Run
 
 Requires [Bun](https://bun.sh) and the Bend source checkout linked at `.refs/bend`.
