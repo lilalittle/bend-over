@@ -1,34 +1,13 @@
 import Base
+import ./web.bend as Web
 
-# Each IO signature is implemented by a registered JavaScript effect.
-def Web.message() -> IO(String):
-  import "./effects.js"
-
-def Web.palette() -> IO(U32):
-  import "./effects.js"
-
-def Web.paint(message: String, hue: U32) -> IO(Unit):
-  import "./effects.js"
-
-def Web.delay() -> IO(U32):
-  import "./effects.js"
-
-def Web.sleep(ms: U32) -> IO(Unit):
-  import "./effects.js"
-
-def Web.save(message: String) -> IO(Bool):
-  import "./effects.js"
-
-def Web.finish(message: String) -> IO(Unit):
-  import "./effects.js"
-
-# JavaScript returns a Bool. Bend decides what happens next.
-def finish(saved: Bool) -> IO(Unit):
+# A failed save must never claim the signal was saved.
+def storage_message(saved: Bool) -> String:
   match saved:
     case True{}:
-      Web.finish("Saved to this browser.")
+      "Saved to this browser."
     case False{}:
-      Web.finish("Storage is unavailable. Your signal still ran.")
+      "Storage is unavailable. Your signal still ran."
 
 # +message permits reuse of this immutable string.
 def signal(+message: String) -> IO(Unit):
@@ -38,7 +17,7 @@ def signal(+message: String) -> IO(Unit):
     ms : U32 <- Web.delay()
     Web.sleep(ms)
     saved : Bool <- Web.save(message)
-    finish(saved)
+    Web.finish(storage_message(saved))
 
 def main() -> IO(Unit):
   do IO<Unit>:

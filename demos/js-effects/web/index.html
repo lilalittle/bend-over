@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8f5">
+  <meta name="description" content="A live Bend 2 playground: typed IO, real JavaScript effects, and a browser you can watch respond.">
+  <title>Bend · JavaScript effects playground</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/" class="wordmark" aria-label="Homepage">bend<span class="wordmark-dot">.</span></a>
+      <div class="header-divider" aria-hidden="true"></div>
+      <p class="header-label">The browser experiments</p>
+      <nav class="desktop-nav" aria-label="Main navigation">
+        <a href="#playground" aria-current="page">Playground</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="https://github.com/bendlang/bend/blob/main/guide/EFFECTS.md" target="_blank" rel="noreferrer">Bend docs ↗</a>
+      </nav>
+      <details class="mobile-nav">
+        <summary aria-label="Open navigation">Menu</summary>
+        <nav aria-label="Mobile navigation">
+          <a href="#playground">Playground</a><a href="#how-it-works">How it works</a>
+          <a href="https://github.com/bendlang/bend/blob/main/guide/EFFECTS.md" target="_blank" rel="noreferrer">Bend docs ↗</a>
+        </nav>
+      </details>
+    </div>
+  </header>
+
+  <main class="container" id="playground">
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow"><span class="tiny-line" aria-hidden="true"></span> EXPERIMENT 001 / JAVASCRIPT EFFECTS</p>
+        <h1 id="page-title">Pure code. Real-world effects.</h1>
+        <p class="intro-copy">Bend calls the shots. JavaScript touches the world.<br class="desktop-break"> Send a signal through both, and watch every effect happen.</p>
+      </div>
+      <div class="runtime-badge"><span class="status-dot" aria-hidden="true"></span> Compiled Bend 2 <span class="muted">/</span> Browser runtime</div>
+    </section>
+
+    <div class="workspace">
+      <section class="experiment" aria-labelledby="experiment-title">
+        <div class="section-bar"><h2 id="experiment-title">Send a signal</h2><p class="mono muted">01 — Live experiment</p></div>
+        <form id="signal-form">
+          <label for="message">Your message</label>
+          <input id="message" name="message" type="text" value="Hello, browser." maxlength="80" required autocomplete="off">
+          <div class="controls-row">
+            <fieldset class="tone-control"><legend>Signal color</legend>
+              <div class="tone-options">
+                <label class="tone-option mint" title="Mint"><input type="radio" name="tone" value="mint" checked><span aria-hidden="true"></span><span class="sr-only">Mint</span></label>
+                <label class="tone-option amber" title="Amber"><input type="radio" name="tone" value="amber"><span aria-hidden="true"></span><span class="sr-only">Amber</span></label>
+                <label class="tone-option rose" title="Rose"><input type="radio" name="tone" value="rose"><span aria-hidden="true"></span><span class="sr-only">Rose</span></label>
+              </div>
+            </fieldset>
+            <div class="delay-control"><label for="delay">Pause <output for="delay" id="delay-value">600 ms</output></label><input id="delay" name="delay" type="range" min="0" max="2000" step="100" value="600"></div>
+          </div>
+          <div class="run-row"><button id="run" class="primary-button" type="submit"><span aria-hidden="true">▶</span> Run effects <kbd>↵</kbd></button><p class="run-hint">7 effects. One Bend program.</p></div>
+          <label class="failure-control"><input name="fail-network" id="fail-network" type="checkbox"> Simulate a failed fetch</label>
+        </form>
+
+        <div id="signal-surface" class="signal-surface" data-state="ready">
+          <div class="surface-top"><p class="mono">BROWSER OUTPUT</p><p id="surface-state" class="mono">Waiting for a signal</p></div>
+          <div class="signal-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit orbit-three"></div><div class="signal-core"></div></div>
+          <div class="signal-content"><p class="signal-label mono" id="signal-label">YOUR NEXT SIDE EFFECT</p><p id="signal-message">Make something happen.</p></div>
+          <div class="surface-bottom"><p class="mono">BEND <span aria-hidden="true">→</span> JAVASCRIPT <span aria-hidden="true">→</span> DOM</p><p class="mono" id="surface-coordinate">IO(Unit)</p></div>
+        </div>
+        <div class="saved-row"><div class="saved-copy"><p class="saved-label">Last saved signal <span class="mono">localStorage</span></p><p id="saved-message">Nothing saved yet.</p></div><button type="button" id="clear-saved" class="text-button" disabled>Clear</button></div>
+      </section>
+
+      <section class="source-panel" aria-labelledby="source-title">
+        <div class="source-heading"><h2 id="source-title">The code behind the signal</h2><p class="mono">REAL SOURCE / READ ONLY</p></div>
+        <div class="source-tabs" role="tablist" aria-label="Source files">
+          <button type="button" role="tab" id="tab-main" data-file="main.bend" aria-selected="true" aria-controls="source-view">main.bend</button>
+          <button type="button" role="tab" id="tab-web" data-file="web.bend" aria-selected="false" aria-controls="source-view" tabindex="-1">web.bend</button>
+          <button type="button" role="tab" id="tab-effects" data-file="effects.js" aria-selected="false" aria-controls="source-view" tabindex="-1">effects.js</button>
+          <button type="button" role="tab" id="tab-host" data-file="host.js" aria-selected="false" aria-controls="source-view" tabindex="-1">host.js</button>
+        </div>
+        <div class="source-scroll" id="source-view" role="tabpanel" aria-labelledby="tab-main" tabindex="0"><pre id="source-code"><code>Loading compiled source…</code></pre></div>
+        <div class="source-footer"><p id="source-description">Bend sequences the effects and handles the result.</p><button type="button" id="copy-source" class="code-button">Copy source</button></div>
+        <div class="boundary-note"><p class="mono">THE BOUNDARY</p><p><code>IO(String)</code> in Bend. A string in JavaScript.<br>Typed calls out. Real values back.</p><span aria-hidden="true">↗</span></div>
+      </section>
+    </div>
+
+    <section class="trace-section" aria-labelledby="trace-title">
+      <div class="section-bar trace-heading"><div class="trace-title-group"><h2 id="trace-title">Effect trace</h2><p id="trace-count" class="count-badge">0 / 7</p></div><div class="trace-actions"><p id="run-status" role="status" aria-live="polite">Ready when you are.</p><button type="button" id="clear-trace" class="text-button" disabled>Clear trace</button></div></div>
+      <div class="trace-empty" id="trace-empty"><p class="trace-empty-mark mono" aria-hidden="true">[ → ]</p><div><p>Every call leaves a trace.</p><p class="muted">Run the program to inspect its arguments, return values, and timing.</p></div></div>
+      <ol id="trace-list" class="trace-list" role="list" aria-label="JavaScript effect calls"></ol>
+      <p id="run-error" class="error-message" role="alert" hidden></p>
+    </section>
+
+    <section class="explanation" id="how-it-works" aria-labelledby="explanation-title">
+      <div class="explanation-intro"><p class="eyebrow">A SMALL BRIDGE, A REAL PROGRAM</p><h2 id="explanation-title">Follow the effect.</h2><p>Bend owns the sequence. A JavaScript handler carries out each request, then passes its result back.</p></div>
+      <div class="explanation-step"><p class="step-number mono">01 / DECLARE</p><h3>A typed boundary</h3><p><code>web.bend</code> declares each effect with an <code>IO</code> return type and imports its JavaScript implementation.</p></div>
+      <div class="explanation-step"><p class="step-number mono">02 / PERFORM</p><h3>A browser action</h3><p><code>io_eff</code> registers the handler. It can fetch JSON, update the DOM, wait for a timer, or save a value.</p></div>
+      <div class="explanation-step"><p class="step-number mono">03 / RESUME</p><h3>Back to Bend</h3><p>The browser runner awaits the result and resumes the program. The next effect starts when the last one finishes.</p></div>
+    </section>
+  </main>
+  <footer class="container"><p>A Bend experiment. Running right here in your browser.</p><p class="mono">NO SERVER LOGIC · NO API KEYS</p></footer>
+  <noscript>This playground needs JavaScript to run the compiled Bend program.</noscript>
+</body>
+</html>

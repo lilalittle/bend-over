@@ -6,7 +6,6 @@
     "build": "bun scripts/build.ts",
     "dev": "bun run build && bun scripts/serve.ts",
     "start": "bun scripts/serve.ts",
-    "test": "bun test tests/unit",
-    "test:e2e": "playwright test"
+    "test": "bun test tests/unit"
   }
 }

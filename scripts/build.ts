@@ -35,6 +35,7 @@ export async function buildDemo() {
   await cp(join(demo, "web"), output, { recursive: true });
   await Bun.write(join(output, "sources.json"), JSON.stringify({
     "main.bend": await Bun.file(join(demo, "main.bend")).text(),
+    "web.bend": await Bun.file(join(demo, "web.bend")).text(),
     "effects.js": await Bun.file(join(demo, "effects.js")).text(),
     "host.js": await Bun.file(join(demo, "web/host.js")).text(),
     "runner.js": await Bun.file(join(root, "packages/browser-io/runner.js")).text(),

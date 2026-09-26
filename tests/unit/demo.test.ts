@@ -37,7 +37,7 @@ describe("compiled Bend → registered JavaScript effects", () => {
       ["save", "Hello from Bend"], ["finish", "Saved to this browser."],
     ]);
     expect(trace.filter(e => e.phase === "start").map(e => e.name)).toEqual([
-      "Web.message", "Web.palette", "Web.paint", "Web.delay", "Web.sleep", "Web.save", "Web.finish",
+      "web.message", "web.palette", "web.paint", "web.delay", "web.sleep", "web.save", "web.finish",
     ]);
     expect(trace.filter(e => e.phase === "complete")).toHaveLength(7);
   });
@@ -53,7 +53,7 @@ describe("compiled Bend → registered JavaScript effects", () => {
     const trace: any[] = [];
     await expect(runDemo(host, { onEffect: (e: any) => trace.push(e) })).rejects.toThrow("Network unavailable");
     expect(calls).toEqual([]);
-    expect(trace.at(-1)).toMatchObject({ name: "Web.palette", phase: "error" });
+    expect(trace.at(-1)).toMatchObject({ name: "web.palette", phase: "error" });
   });
 
   test("concurrent runs keep their host and values separate", async () => {
