@@ -58,7 +58,10 @@ export function deterministicArchive(files: Record<string, Uint8Array>): Buffer 
     blocks.push(header,data,Buffer.alloc((512-data.length%512)%512));
   }
   blocks.push(Buffer.alloc(1024));
-  return gzipSync(Buffer.concat(blocks), { level: 9 });
+  const archive = gzipSync(Buffer.concat(blocks), { level: 9 });
+  // RFC 1952 OS=255 (unknown): Bun/zlib otherwise writes 19 on macOS and 3 on Linux.
+  archive[9] = 255;
+  return archive;
 }
 
 if (import.meta.main) {

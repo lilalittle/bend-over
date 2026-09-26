@@ -25,7 +25,10 @@ export const tag = (c: Pick<Candidate,"name"|"version">) => `${c.name}-v${c.vers
 export const receiptFor = (c: Candidate): Receipt => ({ schema:1, name:c.name, version:c.version,
   entry:c.entry, hash:hubHash(c.files), commit:c.commit, dependencies:c.dependencies, toolchain:c.toolchain,
   assets:Object.fromEntries(Object.entries(c.assets).map(([name,data]) => [name,sha256(data)])) });
-function compatible(a: Receipt, b: Receipt) { return canonical({...a,commit:""}) === canonical({...b,commit:""}); }
+function compatible(a: Receipt, b: Receipt) {
+  // A rerun preserves the original build provenance when the released bytes are identical.
+  return canonical({...a,commit:"",toolchain:{}}) === canonical({...b,commit:"",toolchain:{}});
+}
 function validateAssets(c: Candidate, state: GitHubState, complete: boolean) {
   for (const [name,data] of Object.entries(state.assets)) {
     if (!(name in c.assets) || sha256(data) !== sha256(c.assets[name])) throw new Error(`Conflicting or corrupted asset ${name}; never overwrite it. Raise VERSION for changed content.`);

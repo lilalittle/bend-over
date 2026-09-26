@@ -1,7 +1,8 @@
 # Releasing Bend packages
 
 Merge a `VERSION` bump into `main`. GitHub Actions checks macOS and Linux, builds
-and tests the downloadable archives, publishes the Bend source by hash, verifies
+and tests the downloadable archives, requires identical archive checksums on both
+platforms, publishes the Bend source by hash, verifies
 fresh consumers, releases the companion assets, and finally attaches the Hub name.
 
 | Package | Hub import |

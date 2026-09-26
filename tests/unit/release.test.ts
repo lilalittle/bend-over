@@ -36,13 +36,14 @@ test("Hub hash ignores insertion order but includes paths and content", () => {
 test("release archives are deterministic across insertion order", () => {
   expect(deterministicArchive({ b: Buffer.from("2"), a: Buffer.from("1") }))
     .toEqual(deterministicArchive({ a: Buffer.from("1"), b: Buffer.from("2") }));
+  expect(deterministicArchive({a:Buffer.from("1")})[9]).toBe(255);
 });
 
 test("first release and identical rerun after unrelated commits", async () => {
   const f = fake(), c = candidate();
   await release(c, f.port);
   const writes = f.writes;
-  await release({ ...c, commit: "b".repeat(40) }, f.port);
+  await release({ ...c, commit: "b".repeat(40), toolchain:{bend:"a later verified compiler"} }, f.port);
   expect(f.writes).toBe(writes);
 });
 
