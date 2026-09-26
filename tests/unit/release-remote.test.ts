@@ -16,7 +16,9 @@ function mock() {
     if(p===`/hub/${hubHash(c.files)}/manifest`)return uploaded?new Response(manifest(c.files)):new Response("missing",{status:404});
     if(p===`/hub/${hubHash(c.files)}/main.bend`)return new Response(fault==="corrupt"?"tampered":c.files["main.bend"]);
     const at=p.replace("/api/repos/test/repo","");
-    if(at==="")return Response.json({permissions:{push:true}});
+    // Actions installation tokens can create releases with contents:write even
+    // though this collaborator-oriented field reports false.
+    if(at==="")return Response.json({full_name:"test/repo",permissions:{push:false}});
     if(at.startsWith("/git/ref/tags/"))return commit?Response.json({object:{type:"commit",sha:commit}}):new Response("missing",{status:404});
     if(at.startsWith("/releases/tags/"))return info?Response.json(info):new Response("missing",{status:404});
     if(at==="/releases"&&req.method==="POST"){

@@ -107,8 +107,10 @@ export class Remote implements ReleasePort {
       if(!["yours","free"].includes(check?.name)||check.version_ok!==true)throw new Error(`Hub preflight: ${check?.reason??"name or version unavailable"}`);
     }
     const repo=await this.json(this.repo(""),this.githubKey);
-    // GitHub Actions tokens do not always include a permissions object in this response.
-    if(repo?.permissions && repo.permissions.push!==true)throw new Error("GitHub token cannot write releases");
+    if(repo?.full_name?.toLowerCase()!==this.options.repository.toLowerCase())throw new Error("GitHub repository response does not match the release destination");
+    // Repository collaborator flags can say push:false for an installation token.
+    // They do not describe GITHUB_TOKEN's contents:write permission, set by the workflow.
+    // GitHub enforces that permission on release creation; a refusal remains resumable.
   }
   async upload(c: Candidate) {
     try {
