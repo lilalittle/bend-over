@@ -25,7 +25,7 @@ def main() -> IO(Unit):
 For local development, use `import ./packages/js-eval/js.bend as JS` from the
 repository root. The included [`example.bend`](example.bend) uses `./js.bend`.
 Release receipts include the immutable hash import alternative. See
-[release instructions](../../RELEASING.md) and
+[release instructions](../../skills/releasing/SKILL.md) and
 [downloads](https://github.com/subtleGradient/bend-over/releases/tag/bend-over-js-eval-v0.1.0.0).
 
 ## API
