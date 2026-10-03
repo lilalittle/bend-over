@@ -29,11 +29,13 @@ use the database. Serve over HTTPS or localhost; OPFS needs a secure context.
 Install the Bend API with an exact Hub import:
 
 ```bend
-import bend-over-sqlite@0.1.0.0/sqlite.bend as SQLite
+import bend-over-sqlite@0.1.0.1/sqlite.bend as SQLite
 ```
 
 For JS/Wasm, download the archive and `SHA256SUMS` from the
-[matching GitHub release](https://github.com/subtleGradient/bend-over/releases/tag/bend-over-sqlite-v0.1.0.0).
+[matching GitHub release](https://github.com/subtleGradient/bend-over/releases/tag/bend-over-sqlite-v0.1.0.1).
+Version `0.1.0.1` normalizes gzip headers so companion archives have the same
+checksum on macOS and Linux.
 Extract it, then run `bun launch.js counter.js` or `bun serve.js`. The archive
 contains the pinned Wasm assets, so no npm install or repository checkout is
 needed. `bun.js` and `browser.js` export initializers using those bundled assets.

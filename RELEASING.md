@@ -7,8 +7,8 @@ fresh consumers, releases the companion assets, and finally attaches the Hub nam
 
 | Package | Hub import |
 |---|---|
-| JavaScript evaluation | `import bend-over-js-eval@0.1.0.0/js.bend as JS` |
-| SQLite | `import bend-over-sqlite@0.1.0.0/sqlite.bend as SQLite` |
+| JavaScript evaluation | `import bend-over-js-eval@0.1.0.1/js.bend as JS` |
+| SQLite | `import bend-over-sqlite@0.1.0.1/sqlite.bend as SQLite` |
 
 Names and versions are immutable release coordinates. `VERSION` contains four
 numbers; edit it explicitly when a published file or archive content changes.
