@@ -102,14 +102,22 @@ many outputs.
 from the same IR.
 
 ### W-BO-12 · outcome · active
-**Wish:** A `papers/` corpus captures the math of famous historical papers
-in the DSL, starting with RCCM-related ones — Kelvin's 1867 vortex-atom
-paper and Maxwell's 1865 dynamical theory of the electromagnetic field,
-the lineage of the rccm#3 electric-field dispute. Each capture records
-provenance: original citation and source link.
+**Wish:** A `papers/` corpus captures the math of foundational papers in
+the DSL. The seed is RCCM-first — Kelvin's 1867 vortex-atom paper and
+Maxwell's 1865 dynamical theory of the electromagnetic field (the lineage
+of the rccm#3 electric-field dispute). The canon then grows to the papers
+foundational to the mainstream consensus: Einstein's 1905 electrodynamics
+of moving bodies and 1915 gravitational field equations; the quantum
+mechanics foundations (Heisenberg 1925, Schrödinger 1926, Dirac 1928);
+the Higgs mechanism papers (Englert–Brout and Higgs, 1964); the fluid
+dynamics lineage (Navier–Stokes); and landmark modern papers such as
+"Attention Is All You Need" (2017). Each capture records provenance:
+original citation and source link. Tom curates the canon list.
 **Source:** Tom, chat 2026-10-03 ("the most famous historical papers and
-stuff that is related to the RCCM stuff").
-**Check:** the seed captures exist with provenance; Tom curates the canon list.
+stuff that is related to the RCCM stuff"; "most foundational to the
+mainstream consensus of the status quo of quantum mechanics and gravity").
+**Check:** the seed captures exist with provenance; the canon list is
+recorded and Tom-approved.
 
 ### W-BO-13 · invariant · active
 **Wish:** The math DSL serves the BHAG (bend-packages#65): captured equations
@@ -118,3 +126,15 @@ laws/proofs tomorrow. Capture never substitutes for proof.
 **Source:** Tom, chat 2026-10-03; W-BO-1.
 **Check:** corpus work is tracked against #65's four outcomes; no captured
 equation is presented as verified.
+
+### W-BO-14 · invariant · active
+**Wish:** Where shared standards exist, the DSL aligns with them instead of
+inventing new ones. Naming, structure, and conventions follow the
+least-uncommon established source — Lean's mathlib and physlib first —
+for every concept they already cover. Novel IR is introduced only where no
+shared convention exists, and is then proposed back upstream where possible.
+**Source:** Tom, chat 2026-10-03 ("align with shared standards and naming
+and DSL from Lean mathlib and physlib… avoid inventing a totally new
+standard when possible").
+**Check:** IR node names for covered concepts match mathlib/physlib naming;
+every deviation is documented with rationale.

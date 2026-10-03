@@ -39,3 +39,12 @@ per the releasing skill. Hub name follows the `bend-over-*` convention
 (`bend-over-math-dsl` proposed; Tom confirms).
 **Source:** releasing skill; W-BO-5.
 **Check:** a release's receipt matches its tag's content, byte for byte.
+
+### W-BO-MD-6 · invariant · active
+**Wish:** Node names, operator conventions, and binder forms follow
+mathlib/physlib where those libraries define them. Where the DSL must
+innovate (concepts with no shared convention), the deviation is documented
+in the package with rationale — and proposed back upstream where feasible.
+**Source:** W-BO-14.
+**Check:** a newcomer fluent in mathlib recognizes the IR's naming without
+a translation table.
