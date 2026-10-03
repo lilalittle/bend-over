@@ -84,3 +84,37 @@ the decision; no separate "approve this PR" issues.
 **Wish:** Public attribution points to Tom (@subtleGradient) for his work.
 **Source:** Tom's attribution rule (2026-10-01).
 **Check:** package authorship and release credits name the human.
+
+### W-BO-10 · outcome · active
+**Wish:** A new package `packages/math-dsl` provides a **semantic** DSL for
+capturing complex equations as structured Bend data (an IR) — meaning, not
+presentation. (Package name provisional — Tom's call.)
+**Source:** Tom, chat 2026-10-03 (BHAG push: capture equations from papers as data).
+**Check:** the corpus papers are expressed as DSL terms; no paper is stored
+as raw LaTeX strings.
+
+### W-BO-11 · outcome · active
+**Wish:** Executable renderers turn the IR into LaTeX and MathML (more
+backends later). Rendering is a separate concern from capture — one IR,
+many outputs.
+**Source:** Tom, chat 2026-10-03 ("renders it as LaTeX or MathML or whatever").
+**Check:** every corpus paper renders to compilable LaTeX and valid MathML
+from the same IR.
+
+### W-BO-12 · outcome · active
+**Wish:** A `papers/` corpus captures the math of famous historical papers
+in the DSL, starting with RCCM-related ones — Kelvin's 1867 vortex-atom
+paper and Maxwell's 1865 dynamical theory of the electromagnetic field,
+the lineage of the rccm#3 electric-field dispute. Each capture records
+provenance: original citation and source link.
+**Source:** Tom, chat 2026-10-03 ("the most famous historical papers and
+stuff that is related to the RCCM stuff").
+**Check:** the seed captures exist with provenance; Tom curates the canon list.
+
+### W-BO-13 · invariant · active
+**Wish:** The math DSL serves the BHAG (bend-packages#65): captured equations
+are structured data that can be rendered for humans today and stated as
+laws/proofs tomorrow. Capture never substitutes for proof.
+**Source:** Tom, chat 2026-10-03; W-BO-1.
+**Check:** corpus work is tracked against #65's four outcomes; no captured
+equation is presented as verified.
