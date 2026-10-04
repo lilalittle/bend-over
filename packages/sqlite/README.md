@@ -58,7 +58,7 @@ def main() -> IO(Unit):
 The Bend entry file and its `effs/` directory are self-contained apart from Base
 and host SQLite. CI publishes the Bend package independently and ships the JS
 companions in its matching GitHub release. BendHub's source packager does not
-automatically package those companion assets. See [RELEASING.md](../../RELEASING.md).
+automatically package those companion assets. See the [releasing skill](../../skills/releasing/SKILL.md).
 
 ## API
 

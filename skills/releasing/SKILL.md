@@ -1,3 +1,16 @@
+# Releasing bend-over packages
+
+**Skill:** `releasing` — cut a versioned, cross-platform release of a bend-over
+package and publish it to BendHub with a matching GitHub release.
+
+## When to use
+
+Use this skill when a package `VERSION` bump merges to `main`, when preparing a
+release candidate locally (`bun run release:check`), or when recovering a
+failed or interrupted publish. Do not improvise the release steps — follow them.
+
+## Instructions
+
 # Releasing Bend packages
 
 Merge a `VERSION` bump into `main`. GitHub Actions checks macOS and Linux, builds
