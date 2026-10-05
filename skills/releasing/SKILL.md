@@ -1,3 +1,16 @@
+# Releasing bend-over packages
+
+**Skill:** `releasing` — cut a versioned, cross-platform release of a bend-over
+package and publish it to BendHub with a matching GitHub release.
+
+## When to use
+
+Use this skill when a package `VERSION` bump merges to `main`, when preparing a
+release candidate locally (`bun run release:check`), or when recovering a
+failed or interrupted publish. Do not improvise the release steps — follow them.
+
+## Instructions
+
 # Releasing Bend packages
 
 Merge a `VERSION` bump into `main`. GitHub Actions checks macOS and Linux, builds
@@ -7,9 +20,9 @@ fresh consumers, releases the companion assets, and finally attaches the Hub nam
 
 | Package | Hub import |
 |---|---|
-| JavaScript evaluation | `import bend-over-js-eval@0.1.0.0/js.bend as JS` |
+| JavaScript evaluation | `import bend-over-js-eval@0.1.0.1/js.bend as JS` |
 | Math DSL | `import bend-over-math-dsl@0.1.0.0/math.bend as Math` |
-| SQLite | `import bend-over-sqlite@0.1.0.0/sqlite.bend as SQLite` |
+| SQLite | `import bend-over-sqlite@0.1.0.1/sqlite.bend as SQLite` |
 
 Names and versions are immutable release coordinates. `VERSION` contains four
 numbers; edit it explicitly when a published file or archive content changes.

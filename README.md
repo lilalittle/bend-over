@@ -26,7 +26,7 @@ SQLite companion archive.
 - [Browser effects demo](demos/js-effects/): Bend calling browser APIs, with a
   live trace of effect arguments, results, and failures.
 
-Use Bun 1.4.2 and Bend 2.0.29. See the [setup instructions](RELEASING.md#before-merging)
+Use Bun 1.4.2 and Bend 2.0.29. See the [setup instructions](skills/releasing/SKILL.md#before-merging)
 for the pinned compiler and source checkout.
 
 ```sh
@@ -45,4 +45,4 @@ bun run release:check      # proofs, native/Wasm/browser tests, and release chec
 Packages are versioned and published independently. Merge a package `VERSION`
 bump into `main`; CI checks the package, publishes it to BendHub, and creates a
 matching GitHub release. SQLite releases include a standalone JS/Wasm companion
-archive. See [RELEASING.md](RELEASING.md) for the full process and recovery steps.
+archive. See the [releasing skill](skills/releasing/SKILL.md) for the full process and recovery steps.
