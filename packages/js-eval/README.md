@@ -1,12 +1,13 @@
 # JavaScript evaluation for Bend
 
 Evaluate a Bend `String` as JavaScript and get a typed JSON value back.
-Version `0.1.0.0`, released as `bend-over-js-eval` on BendHub.
+Version `0.1.0.1`, released as `bend-over-js-eval` on BendHub.
+This version uses platform-independent gzip headers for its companion archive.
 The package carries an explicit MIT-0 license.
 
 ```python
 import Base
-import bend-over-js-eval@0.1.0.0/js.bend as JS
+import bend-over-js-eval@0.1.0.1/js.bend as JS
 import bend-kit-json@0.3.0.0/json.bend as Json
 
 def show(result: Result<&2, &2, String, Json.Val>) -> IO(Unit):
@@ -25,8 +26,8 @@ def main() -> IO(Unit):
 For local development, use `import ./packages/js-eval/js.bend as JS` from the
 repository root. The included [`example.bend`](example.bend) uses `./js.bend`.
 Release receipts include the immutable hash import alternative. See
-[release instructions](../../RELEASING.md) and
-[downloads](https://github.com/subtleGradient/bend-over/releases/tag/bend-over-js-eval-v0.1.0.0).
+[release instructions](../../skills/releasing/SKILL.md) and
+[downloads](https://github.com/subtleGradient/bend-over/releases/tag/bend-over-js-eval-v0.1.0.1).
 
 ## API
 
